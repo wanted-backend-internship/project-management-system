@@ -1,0 +1,23 @@
+@mixin button-blue($width, $height, $margin) {
+  width: $width;
+  height: $height;
+  margin: $margin;
+  border: 1px solid #1E1E1C;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #007AFF;
+}
+
+@mixin button-gray($width, $height, $margin) {
+  width: $width;
+  height: $height;
+  margin: $margin;
+  border: 1px solid #1E1E1C;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #AEAEB2;
+}

@@ -1,0 +1,23 @@
+@mixin pre100 ($size, $color) {
+  font-family: 'pre-regular', sans-serif;
+  font-size: $size;
+  color: $color;
+}
+
+@mixin pre200 ($size, $color) {
+  font-family: 'pre-medium', sans-serif;
+  font-size: $size;
+  color: $color;
+}
+
+@mixin pre300 ($size, $color) {
+  font-family: 'pre-bold', sans-serif;
+  font-size: $size;
+  color: $color;
+}
+
+@mixin pre400 ($size, $color) {
+  font-family: 'pre-black', sans-serif;
+  font-size: $size;
+  color: $color;
+}
