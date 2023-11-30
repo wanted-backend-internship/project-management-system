@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import wanted.assignment.pmsystem.domain.planner.board.dto.requests.CreateBoardRequest;
 import wanted.assignment.pmsystem.domain.planner.board.dto.requests.DeleteBoardRequest;
 import wanted.assignment.pmsystem.domain.planner.board.dto.requests.UpdateBoardRequest;
+import wanted.assignment.pmsystem.domain.planner.board.dto.responses.BoardListResponse;
 import wanted.assignment.pmsystem.domain.planner.board.dto.responses.CreateBoardResponse;
 import wanted.assignment.pmsystem.domain.planner.board.dto.responses.UpdateBoardResponse;
 import wanted.assignment.pmsystem.domain.planner.board.dto.responses.BoardDetailResponse;
@@ -63,6 +64,17 @@ public class BoardController {
         try {
             List<BoardDetailResponse> boardDetailResponses = boardService.displayBoardDetail(boardId);
             return ResponseEntity.ok(boardDetailResponses);
+
+        } catch (ApiException apiException) {
+            return ResponseEntity.status(apiException.getErrorType().getStatus()).body(apiException.getErrorType().getMessage());
+        }
+    }
+
+    @GetMapping(value = "/me")
+    public ResponseEntity<?> displayBoards() {
+        try {
+            List<BoardListResponse> boardListResponses = boardService.displayBoardList();
+            return ResponseEntity.ok(boardListResponses);
 
         } catch (ApiException apiException) {
             return ResponseEntity.status(apiException.getErrorType().getStatus()).body(apiException.getErrorType().getMessage());

@@ -3,6 +3,7 @@ package wanted.assignment.pmsystem.domain.planner.board;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,15 +12,17 @@ import wanted.assignment.pmsystem.domain.planner.board.domain.BoardEditor;
 import wanted.assignment.pmsystem.domain.planner.board.dto.requests.CreateBoardRequest;
 import wanted.assignment.pmsystem.domain.planner.board.dto.requests.DeleteBoardRequest;
 import wanted.assignment.pmsystem.domain.planner.board.dto.requests.UpdateBoardRequest;
+import wanted.assignment.pmsystem.domain.planner.board.dto.responses.BoardListResponse;
 import wanted.assignment.pmsystem.domain.planner.board.dto.responses.CreateBoardResponse;
 import wanted.assignment.pmsystem.domain.planner.board.dto.responses.UpdateBoardResponse;
+import wanted.assignment.pmsystem.domain.planner.member.MemberService;
 import wanted.assignment.pmsystem.domain.planner.task.domain.Task;
 import wanted.assignment.pmsystem.domain.planner.task.TaskRepository;
 import wanted.assignment.pmsystem.domain.planner.taskBox.domain.TaskBox;
 import wanted.assignment.pmsystem.domain.planner.taskBox.TaskBoxRepository;
 import wanted.assignment.pmsystem.domain.planner.board.dto.responses.BoardDetailResponse;
 import wanted.assignment.pmsystem.domain.planner.member.domain.Member;
-import wanted.assignment.pmsystem.domain.planner.member.repository.MemberRepository;
+import wanted.assignment.pmsystem.domain.planner.member.MemberRepository;
 import wanted.assignment.pmsystem.domain.planner.member.domain.Role;
 import wanted.assignment.pmsystem.domain.user.User;
 import wanted.assignment.pmsystem.global.exception.ApiException;
@@ -33,6 +36,7 @@ public class BoardService {
     private final MemberRepository memberRepository;
     private final TaskBoxRepository taskBoxRepository;
     private final TaskRepository taskRepository;
+    private final MemberService memberService;
     private final AuthUtil authUtil;
 
     @Transactional
@@ -96,6 +100,28 @@ public class BoardService {
             taskRepository.deleteAll(task);
         }
         taskBoxRepository.deleteAll(taskBoxs);
+    }
+
+    public List<BoardListResponse> displayBoardList () {
+        Long userId = authUtil.getLoginUserIndex();
+
+        List<Member> members = memberRepository.findByUserId(userId);
+        List<Board> boards= members.stream()
+                .map(Member::getBoard)
+                .toList();
+
+        List<BoardListResponse> boardListResponses = new ArrayList<>();
+
+        for (Board board : boards) {
+            BoardListResponse boardListResponse = BoardListResponse.builder()
+                    .boardId(board.getId())
+                    .boardTitle(board.getTitle())
+                    .members(memberService.displayMemberInfo(board.getId()))
+                    .build();
+
+            boardListResponses.add(boardListResponse);
+        }
+        return boardListResponses;
     }
 
     @Transactional
