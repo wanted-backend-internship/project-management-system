@@ -39,7 +39,20 @@ public enum ErrorType {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER-001", "내부 서버 오류로 인해 요청을 처리할 수 없습니다."),
 
     // null 값 존재
-    NULL_VALUE_EXIST(HttpStatus.BAD_REQUEST, "CLIENT-001", "null 값이 존재 합니다.");
+    NULL_VALUE_EXIST(HttpStatus.BAD_REQUEST, "CLIENT-001", "null 값이 존재 합니다."),
+
+    // board 존재
+    BOARD_NOT_EXIST(HttpStatus.NOT_FOUND, "BOARD-001", "해당 board 가 존재 하지 않습니다."),
+
+    // task box 존재
+    TASK_BOX_NOT_EXIST(HttpStatus.NOT_FOUND, "TASKBOX-001", "해당 task box 가 존재 하지 않습니다."),
+
+    // task 존재
+    TASK_NOT_EXIST(HttpStatus.NOT_FOUND, "TASK-001", "해당 task 가 존재 하지 않습니다."),
+
+    // task 존재
+    MEMBER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "MEMBER-001", "해당 멤버가 이미 존재합니다.");
+
 
     private final HttpStatus status;
     private final String errorCode;
