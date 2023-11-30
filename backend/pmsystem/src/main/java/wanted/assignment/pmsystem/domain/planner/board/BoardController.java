@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wanted.assignment.pmsystem.domain.planner.board.dto.requests.CreateBoardRequest;
-import wanted.assignment.pmsystem.domain.planner.board.dto.requests.DeleteBoardRequest;
 import wanted.assignment.pmsystem.domain.planner.board.dto.requests.UpdateBoardRequest;
 import wanted.assignment.pmsystem.domain.planner.board.dto.responses.BoardListResponse;
 import wanted.assignment.pmsystem.domain.planner.board.dto.responses.CreateBoardResponse;
@@ -48,10 +47,10 @@ public class BoardController {
         }
     }
 
-    @DeleteMapping(value = "")
-    public ResponseEntity<?> deleteBoard (@RequestBody DeleteBoardRequest request) {
+    @DeleteMapping(value = "/{boardId}")
+    public ResponseEntity<?> deleteBoard(@PathVariable("boardId") Long boardId) {
         try {
-            boardService.deleteBoard(request);
+            boardService.deleteBoard(boardId);
             return ResponseEntity.ok("Board 삭제 성공!");
 
         } catch (ApiException apiException) {
@@ -60,7 +59,7 @@ public class BoardController {
     }
 
     @GetMapping(value = "/{boardId}")
-    public ResponseEntity<?> displayBoardDetail (@PathVariable Long boardId) {
+    public ResponseEntity<?> displayBoardDetail (@PathVariable("boardId") Long boardId) {
         try {
             List<BoardDetailResponse> boardDetailResponses = boardService.displayBoardDetail(boardId);
             return ResponseEntity.ok(boardDetailResponses);

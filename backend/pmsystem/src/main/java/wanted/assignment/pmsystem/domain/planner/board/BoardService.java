@@ -3,14 +3,12 @@ package wanted.assignment.pmsystem.domain.planner.board;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wanted.assignment.pmsystem.domain.planner.board.domain.Board;
 import wanted.assignment.pmsystem.domain.planner.board.domain.BoardEditor;
 import wanted.assignment.pmsystem.domain.planner.board.dto.requests.CreateBoardRequest;
-import wanted.assignment.pmsystem.domain.planner.board.dto.requests.DeleteBoardRequest;
 import wanted.assignment.pmsystem.domain.planner.board.dto.requests.UpdateBoardRequest;
 import wanted.assignment.pmsystem.domain.planner.board.dto.responses.BoardListResponse;
 import wanted.assignment.pmsystem.domain.planner.board.dto.responses.CreateBoardResponse;
@@ -86,15 +84,15 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteBoard(DeleteBoardRequest request) {
-        Board board = boardRepository.findById(request.getBoardId())
+    public void deleteBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new ApiException(ErrorType.BOARD_NOT_EXIST));
         boardRepository.delete(board);
 
-        List<Member> members = memberRepository.findByBoardId(request.getBoardId());
+        List<Member> members = memberRepository.findByBoardId(boardId);
         memberRepository.deleteAll(members);
 
-        List<TaskBox> taskBoxs = taskBoxRepository.findByBoardId(request.getBoardId());
+        List<TaskBox> taskBoxs = taskBoxRepository.findByBoardId(boardId);
         for (TaskBox taskBox : taskBoxs) {
             List<Task> task = taskRepository.findByTaskBoxId(taskBox.getId());
             taskRepository.deleteAll(task);
