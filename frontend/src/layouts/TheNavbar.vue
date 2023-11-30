@@ -2,8 +2,13 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTableColumns, faChartSimple, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {useAuthStore} from "../store/AuthStore.ts";
+import {computed} from "vue";
 
 library.add(faTableColumns, faChartSimple, faArrowRightFromBracket);
+
+const authStore = useAuthStore();
+const loginStatus = computed(() => authStore.isLoggedIn);
 </script>
 
 <template>
@@ -16,17 +21,17 @@ library.add(faTableColumns, faChartSimple, faArrowRightFromBracket);
     <!-- 메뉴 리스트 -->
     <div class="menu-container">
       <div class="menu-contents">
-        <router-link to="/post" class="menu-lists" active-class="active">
+        <router-link to="/project" class="menu-lists" active-class="active">
           <font-awesome-icon icon="fa-solid fa-table-columns" class="icon"/>
           <span>프로젝트</span>
         </router-link>
 
-        <router-link to="/message" class="menu-lists" active-class="active">
+        <router-link to="/statistics" class="menu-lists" active-class="active">
           <font-awesome-icon icon="fa-solid fa-chart-simple" class="icon"/>
           <span>통계</span>
         </router-link>
       </div>
-      <router-link to="/logout" class="logout-btn"  style="margin-top: 40px;">
+      <router-link to="/logout" v-if="loginStatus" class="logout-btn"  style="margin-top: 40px;">
         <font-awesome-icon icon="fa-solid fa-arrow-right-from-bracket" class="icon"/>
         <span>로그 아웃</span>
       </router-link>
@@ -52,7 +57,7 @@ library.add(faTableColumns, faChartSimple, faArrowRightFromBracket);
 }
 
 .logo-image {
-  @include image(180px, 20px 0 20px 20px);
+  @include image(170px, 20px 0 20px 25px);
 }
 
 .img-container,
@@ -66,7 +71,7 @@ library.add(faTableColumns, faChartSimple, faArrowRightFromBracket);
 }
 
 .menu-lists {
-  @include container(row, flex-start, center, 70%, auto);
+  @include container(row, flex-start, center, 85%, auto);
   @include pre200(20px, #1E1E1C);
   height: 48px;
   padding: 0 20px;
@@ -76,7 +81,7 @@ library.add(faTableColumns, faChartSimple, faArrowRightFromBracket);
 }
 
 .logout-btn {
-  @include container(row, flex-start, center, 70%, auto);
+  @include container(row, flex-start, center, 85%, auto);
   @include pre200(20px, $gray600);
   height: 48px;
   padding: 0 20px;
@@ -89,10 +94,6 @@ library.add(faTableColumns, faChartSimple, faArrowRightFromBracket);
   background-color: $blue100;
   color: white;
   text-decoration: none;
-}
-
-.profile-image {
-  @include image(123px, 85px 0 50px 0);
 }
 
 .line {

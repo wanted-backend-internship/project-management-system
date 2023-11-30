@@ -10,6 +10,10 @@ const routes = [
         path: '/register',
         component: () => import('../components/user/TheRegister.vue'),
     },
+    {
+        path:'/project',
+        component:() => import('../components/project/board/BoardList.vue'),
+    },
 ];
 
 const router = createRouter({
