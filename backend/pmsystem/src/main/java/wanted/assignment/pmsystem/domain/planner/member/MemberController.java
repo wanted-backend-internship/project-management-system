@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wanted.assignment.pmsystem.domain.planner.board.dto.requests.DeleteBoardRequest;
+import wanted.assignment.pmsystem.domain.planner.member.dto.SearchUserRequest;
 import wanted.assignment.pmsystem.domain.planner.member.dto.requests.CreateMemberRequest;
 import wanted.assignment.pmsystem.domain.planner.member.dto.requests.DeleteMemberRequest;
 import wanted.assignment.pmsystem.domain.planner.member.dto.responses.MemberInfoResponse;
+import wanted.assignment.pmsystem.domain.planner.member.dto.responses.SearchUserResponse;
 import wanted.assignment.pmsystem.global.exception.ApiException;
 
 @RestController
@@ -21,6 +23,17 @@ import wanted.assignment.pmsystem.global.exception.ApiException;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+
+    @PostMapping(value = "/members/search")
+    public ResponseEntity<?> searchUser (@RequestBody SearchUserRequest request) {
+        try {
+            SearchUserResponse searchUserResponse = memberService.searchUser(request);
+            return ResponseEntity.ok(searchUserResponse);
+
+        } catch (ApiException apiException) {
+            return ResponseEntity.status(apiException.getErrorType().getStatus()).body(apiException.getErrorType().getMessage());
+        }
+    }
 
     @PostMapping(value = "/members")
     public ResponseEntity<?> createMember (@RequestBody CreateMemberRequest request) {

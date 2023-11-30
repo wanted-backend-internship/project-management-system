@@ -14,7 +14,6 @@ import wanted.assignment.pmsystem.domain.planner.member.dto.requests.CreateMembe
 import wanted.assignment.pmsystem.domain.planner.member.dto.requests.DeleteMemberRequest;
 import wanted.assignment.pmsystem.domain.planner.member.dto.responses.MemberInfoResponse;
 import wanted.assignment.pmsystem.domain.planner.member.dto.responses.SearchUserResponse;
-import wanted.assignment.pmsystem.domain.planner.member.repository.MemberRepository;
 import wanted.assignment.pmsystem.domain.user.User;
 import wanted.assignment.pmsystem.domain.user.UserRepository;
 import wanted.assignment.pmsystem.global.exception.ApiException;
@@ -41,7 +40,7 @@ public class MemberService {
 
     @Transactional
     public void createMember (CreateMemberRequest request) {
-        Boolean memberCheck = memberRepository.findByUserId(request.getUserId()).isPresent();
+        boolean memberCheck = memberRepository.findByUserIdAndBoardId(request.getUserId(), request.getBoardId()).isPresent();
         if (memberCheck) {
             throw new ApiException(ErrorType.MEMBER_ALREADY_EXIST);
         }
