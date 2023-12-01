@@ -1,0 +1,51 @@
+@import '../colors/_color.scss';
+@import '../common/font.scss';
+
+.kanban-badge-people {
+  background-color: $gray500;
+  padding: 2px 12px;
+  border-radius: 15px;
+  @include pre300(14px, $gray900)
+}
+
+.kanban-badge-backend {
+  background-color: $pink100;
+  padding: 2px 12px;
+  border-radius: 15px;
+  @include pre200(14px, $white)
+}
+
+.kanban-badge-frontend {
+  background-color: $violet200;
+  padding: 2px 12px;
+  border-radius: 15px;
+  @include pre200(14px, $white)
+}
+
+.kanban-badge-design {
+  background-color: $orange100;
+  padding: 2px 12px;
+  border-radius: 15px;
+  @include pre200(14px, $white)
+}
+
+.kanban-badge-qa {
+  background-color: $green100;
+  padding: 2px 12px;
+  border-radius: 15px;
+  @include pre200(14px, $white)
+}
+
+.kanban-badge-pm {
+  background-color: $yellow100;
+  padding: 2px 12px;
+  border-radius: 15px;
+  @include pre200(14px, $white)
+}
+
+.kanban-badge-document {
+  background-color: $blue100;
+  padding: 2px 12px;
+  border-radius: 15px;
+  @include pre200(14px, $white)
+}
