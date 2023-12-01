@@ -14,6 +14,10 @@ const routes = [
         path:'/project',
         component:() => import('../components/project/board/BoardList.vue'),
     },
+    {
+        path:'/project/:boardId',
+        component:() => import('../components/project/board/BoardDetail.vue')
+    }
 ];
 
 const router = createRouter({

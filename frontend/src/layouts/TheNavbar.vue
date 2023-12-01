@@ -31,7 +31,7 @@ const loginStatus = computed(() => authStore.isLoggedIn);
           <span>통계</span>
         </router-link>
       </div>
-      <router-link to="/logout" v-if="loginStatus" class="logout-btn"  style="margin-top: 40px;">
+      <router-link to="/logout" v-if="loginStatus" class="logout-btn"  style="margin-top: 40px;" active-class="active">
         <font-awesome-icon icon="fa-solid fa-arrow-right-from-bracket" class="icon"/>
         <span>로그 아웃</span>
       </router-link>
@@ -90,7 +90,7 @@ const loginStatus = computed(() => authStore.isLoggedIn);
   text-decoration: none;
 }
 
-.menu-lists:hover {
+.menu-lists.active {
   background-color: $blue100;
   color: white;
   text-decoration: none;
