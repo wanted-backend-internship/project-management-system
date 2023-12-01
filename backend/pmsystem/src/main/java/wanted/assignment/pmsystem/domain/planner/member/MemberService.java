@@ -9,7 +9,7 @@ import wanted.assignment.pmsystem.domain.planner.board.BoardRepository;
 import wanted.assignment.pmsystem.domain.planner.board.domain.Board;
 import wanted.assignment.pmsystem.domain.planner.member.domain.Member;
 import wanted.assignment.pmsystem.domain.planner.member.domain.Role;
-import wanted.assignment.pmsystem.domain.planner.member.dto.SearchUserRequest;
+import wanted.assignment.pmsystem.domain.planner.member.dto.requests.SearchUserRequest;
 import wanted.assignment.pmsystem.domain.planner.member.dto.requests.CreateMemberRequest;
 import wanted.assignment.pmsystem.domain.planner.member.dto.requests.DeleteMemberRequest;
 import wanted.assignment.pmsystem.domain.planner.member.dto.responses.MemberInfoResponse;
@@ -62,8 +62,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void deleteMember (DeleteMemberRequest request) {
-        Member member = memberRepository.findById(request.getMemberId())
+    public void deleteMember (Long memberId) {
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new ApiException(ErrorType.USER_NOT_FOUND));
         memberRepository.delete(member);
     }

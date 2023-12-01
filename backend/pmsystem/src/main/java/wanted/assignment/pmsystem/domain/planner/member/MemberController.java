@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import wanted.assignment.pmsystem.domain.planner.member.dto.SearchUserRequest;
+import wanted.assignment.pmsystem.domain.planner.member.dto.requests.SearchUserRequest;
 import wanted.assignment.pmsystem.domain.planner.member.dto.requests.CreateMemberRequest;
 import wanted.assignment.pmsystem.domain.planner.member.dto.requests.DeleteMemberRequest;
 import wanted.assignment.pmsystem.domain.planner.member.dto.responses.MemberInfoResponse;
@@ -45,10 +45,10 @@ public class MemberController {
         }
     }
 
-    @DeleteMapping(value = "/members")
-    public ResponseEntity<?> deleteMember (@RequestBody DeleteMemberRequest request) {
+    @DeleteMapping(value = "/members/{memberId}")
+    public ResponseEntity<?> deleteMember (@PathVariable("memberId") Long memberId) {
         try {
-            memberService.deleteMember(request);
+            memberService.deleteMember(memberId);
             return ResponseEntity.ok("member 삭제 성공!");
 
         } catch (ApiException apiException) {
@@ -57,7 +57,7 @@ public class MemberController {
     }
 
     @GetMapping(value = "/{boardId}/members")
-    public ResponseEntity<?> displayMemberInfo (@PathVariable Long boardId) {
+    public ResponseEntity<?> displayMemberInfo (@PathVariable("boardId") Long boardId) {
         try {
             List<MemberInfoResponse> memberInfoResponses = memberService.displayMemberInfo(boardId);
             return ResponseEntity.ok(memberInfoResponses);
