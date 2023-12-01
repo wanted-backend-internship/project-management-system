@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import {updateBoard} from "../../../api/projcet/board/BoardApi";
+import {updateBoard} from "../../../api/projcet/BoardApi.ts";
 
 const props = defineProps({
   boardId: String,

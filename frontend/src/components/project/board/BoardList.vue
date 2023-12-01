@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import TheModal from "../../common/TheModal.vue";
 import {onMounted, ref} from "vue";
+import {deleteBoard, displayBoards} from "../../../api/projcet/BoardApi.ts";
+import TheModal from "../../common/TheModal.vue";
 import CreateBoard from "./CreateBoard.vue";
-import {deleteBoard, displayBoards} from "../../../api/projcet/board/BoardApi";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import UpdateBoard from "./UpdateBoard.vue";
+import {useProjectStore} from "../../../store/ProjectStore.ts";
 
 library.add(faPenToSquare, faTrashCan);
+const projectStore = useProjectStore();
+const selectProject = (boardId, boardTitle) => {
+  projectStore.setCurrentBoard(boardId, boardTitle);
+};
 
 const boardsData = ref([]);
 
@@ -72,20 +77,20 @@ onMounted(fetchBoards);
     </div>
     <div class="projects-list">
       <!-- 프로젝트 목록을 표시합니다 -->
-      <div class="project" v-for="board in boardsData" :key="board.boardId">
+      <router-link :to="`/project/${board.boardId}`" class="project" v-for="board in boardsData" :key="board.boardId" @click="selectProject(board.boardId, board.boardTitle)">
         <div class="project-content">
-          <h3>{{ board.boardTitle }}</h3>
-          <ul>
-            <li v-for="member in board.members" :key="member.memberId">
+          <div class="project-title">{{ board.boardTitle }}</div>
+          <div class="project-member-container">
+            <div v-for="member in board.members" :key="member.memberId" class="badge-created">
               {{ member.username }}
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
         <div class="board-button-container">
           <font-awesome-icon icon="fa-regular fa-pen-to-square" @click="openUpdateModal(board.boardId, board.boardTitle)" style="margin-right: 15px;" class="board-icon"/>
           <font-awesome-icon icon="fa-solid fa-trash-can" @click="handleDeleteBoard(board.boardId)" class="board-icon"/>
         </div>
-      </div>
+      </router-link>
     </div>
   </div>
 
@@ -115,6 +120,10 @@ onMounted(fetchBoards);
   padding: 60px 0 0 60px;
 }
 
+.project-title {
+  @include pre300(26px, $black)
+}
+
 .title {
   @include pre400(40px, $black);
 }
@@ -138,12 +147,14 @@ onMounted(fetchBoards);
 }
 
 .project {
-  @include container(row, flex-start, flex-start, 400px, 150px);
+  @include container(row, flex-start, flex-start, 400px, 140px);
   background-color: $white;
   margin: 10px 20px 10px 0;
   border-radius: 12px;
   border: 1px solid $black;
   padding: 30px 20px 30px 30px;
+  text-decoration: none;
+  color: inherit;
 }
 
 .project-content {
@@ -157,5 +168,19 @@ onMounted(fetchBoards);
 .board-icon {
   font-size: 18px;
   color: $gray600;
+}
+
+.badge-created {
+  border: 1px solid $gray900;
+  background-color: $gray200;
+  padding: 2px 12px;
+  border-radius: 15px;
+  margin-right: 5px;
+  @include pre300(14px, $gray900)
+}
+
+.project-member-container {
+  @include container(row, flex-start, flex-start, 100%, auto);
+  margin-top: 18px;
 }
 </style>

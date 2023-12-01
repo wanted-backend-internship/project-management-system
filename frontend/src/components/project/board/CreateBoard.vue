@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import {createBoard} from "../../../api/projcet/board/BoardApi";
+import {createBoard} from "../../../api/projcet/BoardApi";
 
 const title = ref('');
 

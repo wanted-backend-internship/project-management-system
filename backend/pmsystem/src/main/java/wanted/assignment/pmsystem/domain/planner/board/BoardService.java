@@ -100,6 +100,7 @@ public class BoardService {
         taskBoxRepository.deleteAll(taskBoxs);
     }
 
+    @Transactional
     public List<BoardListResponse> displayBoardList () {
         Long userId = authUtil.getLoginUserIndex();
 
@@ -125,9 +126,9 @@ public class BoardService {
     @Transactional
     public List<BoardDetailResponse> displayBoardDetail(Long boardId) {
         List<BoardDetailResponse> boardDetailResponses = new ArrayList<>();
-        List<TaskBox> taskBoxes = taskBoxRepository.findByBoardId(boardId);
+        List<TaskBox> taskBoxes = taskBoxRepository.findByBoardIdOrderByBoxOrderAsc(boardId);
         for (TaskBox taskBox : taskBoxes) {
-            List<Task> tasks = taskRepository.findByTaskBoxId(taskBox.getId());
+            List<Task> tasks = taskRepository.findByTaskBoxIdOrderByTaskOrderAsc(taskBox.getId());
             BoardDetailResponse boardDetailResponse = BoardDetailResponse.builder()
                     .taskBoxId(taskBox.getId())
                     .taskBoxOrder(taskBox.getBoxOrder())
