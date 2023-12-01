@@ -147,7 +147,7 @@ onMounted(fetchBoards);
 }
 
 .project {
-  @include container(row, flex-start, flex-start, 400px, 140px);
+  @include container(row, flex-start, flex-start, 400px, 155px);
   background-color: $white;
   margin: 10px 20px 10px 0;
   border-radius: 12px;
