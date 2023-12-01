@@ -175,7 +175,7 @@ onMounted(fetchBoards);
   background-color: $gray200;
   padding: 2px 12px;
   border-radius: 15px;
-  margin-right: 5px;
+  margin-right: 10px;
   @include pre300(14px, $gray900)
 }
 
