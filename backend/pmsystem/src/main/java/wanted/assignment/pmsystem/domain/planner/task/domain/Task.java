@@ -39,8 +39,7 @@ public class Task {
                 .taskTitle(title)
                 .tag(tag)
                 .dueDate(dueDate)
-                .workHour(workHour)
-                .createdBy(createdBy);
+                .workHour(workHour);
     }
 
     public void update(TaskEditor taskEditor) {
@@ -48,6 +47,5 @@ public class Task {
         tag = taskEditor.getTag();
         dueDate = taskEditor.getDueDate();
         workHour = taskEditor.getWorkHour();
-        createdBy = taskEditor.getCreatedBy();
     }
 }

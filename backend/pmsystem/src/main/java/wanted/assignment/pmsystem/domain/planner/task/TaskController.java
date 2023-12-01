@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,7 @@ public class TaskController {
         }
     }
 
-    @PatchMapping(value = "/move/other")
+    @PostMapping(value = "/move/other")
     public ResponseEntity<?> moveTaskToOtherTaskBox (@RequestBody MoveTaskOtherTaskBoxRequest request) {
         try {
             taskService.moveTaskToOtherTaskBox(request);
@@ -54,7 +55,7 @@ public class TaskController {
         }
     }
 
-    @PatchMapping(value = "/move/same")
+    @PostMapping(value = "/move/same")
     public ResponseEntity<?> moveTaskToOtherTaskBox (@RequestBody MoveTaskSameTaskBoxRequest request) {
         try {
             taskService.moveTaskToSameTaskBox(request);
@@ -65,10 +66,10 @@ public class TaskController {
         }
     }
 
-    @DeleteMapping(value = "")
-    public ResponseEntity<?> moveTaskToOtherTaskBox (@RequestBody DeleteTaskRequest request) {
+    @DeleteMapping(value = "/{taskId}")
+    public ResponseEntity<?> moveTaskToOtherTaskBox (@PathVariable("taskId") Long taskId) {
         try {
-            taskService.deleteTask(request);
+            taskService.deleteTask(taskId);
             return ResponseEntity.ok("task 삭제 성공!");
 
         } catch (ApiException apiException) {

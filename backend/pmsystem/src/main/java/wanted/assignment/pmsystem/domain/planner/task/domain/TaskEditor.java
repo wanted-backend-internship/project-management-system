@@ -9,19 +9,16 @@ public class TaskEditor {
     private String tag;
     private LocalDate dueDate;
     private String workHour;
-    private String createdBy;
 
     public TaskEditor(String taskTitle,
      String tag,
      LocalDate dueDate,
-     String workHour,
-     String createdBy
+     String workHour
     ) {
         this.taskTitle = taskTitle;
         this.tag = tag;
         this.dueDate = dueDate;
         this.workHour = workHour;
-        this.createdBy = createdBy;
     }
 
     public static TaskEditorBuilder builder() {
@@ -33,7 +30,6 @@ public class TaskEditor {
         private String tag;
         private LocalDate dueDate;
         private String workHour;
-        private String createdBy;
 
         TaskEditorBuilder() {
         }
@@ -66,20 +62,12 @@ public class TaskEditor {
             return this;
         }
 
-        public TaskEditorBuilder createdBy(final String createdBy) {
-            if (createdBy != null && !createdBy.isEmpty()) {
-                this.createdBy = createdBy;
-            }
-            return this;
-        }
-
         public TaskEditor build() {
             return new TaskEditor(
                     taskTitle,
                     tag,
                     dueDate,
-                    workHour,
-                    createdBy
+                    workHour
             );
         }
     }

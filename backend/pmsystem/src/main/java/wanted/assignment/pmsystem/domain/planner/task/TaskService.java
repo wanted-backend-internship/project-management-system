@@ -12,25 +12,34 @@ import wanted.assignment.pmsystem.domain.planner.task.requests.MoveTaskSameTaskB
 import wanted.assignment.pmsystem.domain.planner.task.requests.UpdateTaskRequest;
 import wanted.assignment.pmsystem.domain.planner.taskBox.TaskBoxRepository;
 import wanted.assignment.pmsystem.domain.planner.taskBox.domain.TaskBox;
+import wanted.assignment.pmsystem.domain.user.User;
 import wanted.assignment.pmsystem.global.exception.ApiException;
 import wanted.assignment.pmsystem.global.exception.ErrorType;
+import wanted.assignment.pmsystem.global.util.AuthUtil;
 
 @Service
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskBoxRepository taskBoxRepository;
+    private final AuthUtil authUtil;
+    private final TaskMoveRepository taskMoveRepository;
 
     @Transactional
     public void createTask (CreateTaskRequest request) {
+        User user = authUtil.getLoginUser();
+
+        Long maxOrder = taskRepository.findMaxOrder(request.getTaskBoxId());
+        long nextOrder = (maxOrder != null) ? maxOrder + 1 : 1L;
+
         TaskBox taskBox = taskBoxRepository.findById(request.getTaskBoxId())
                 .orElseThrow(() -> new ApiException(ErrorType.TASK_BOX_NOT_EXIST));
 
         Task task = Task.builder()
-                .taskOrder(request.getTaskOrder())
+                .taskOrder(nextOrder)
                 .title(request.getTaskTitle())
                 .tag(request.getTag())
-                .createdBy(request.getCreatedBy())
+                .createdBy(user.getUsername())
                 .workHour(request.getWorkHour())
                 .dueDate(request.getDueDate())
                 .taskBox(taskBox)
@@ -41,15 +50,13 @@ public class TaskService {
 
     @Transactional
     public void moveTaskToOtherTaskBox (MoveTaskOtherTaskBoxRequest request) {
-        taskRepository.moveTaskToNewTaskBox(
-                request.getTaskId(), request.getNewTaskBoxId(), request.getTaskOrder()
-        );
-        taskRepository.incrementTaskOrderInTaskBox(request.getNewTaskBoxId(), request.getTaskOrder());
+        taskMoveRepository.moveTaskToOtherTaskBox(request.getPrevTaskBoxId(), request.getNewTaskBoxId(), request.getTaskId(),
+                request.getPrevTaskOrder(), request.getNewTaskOrder());
     }
 
     @Transactional
     public void moveTaskToSameTaskBox (MoveTaskSameTaskBoxRequest request) {
-        taskRepository.incrementTaskOrderInTaskBox(request.getTaskBoxId(), request.getNewTaskOrder());
+        taskMoveRepository.moveTaskToSameTaskBox(request.getTaskBoxId(), request.getTaskId(), request.getNewTaskOrder());
     }
 
     @Transactional
@@ -63,15 +70,14 @@ public class TaskService {
                 .tag(request.getTag())
                 .dueDate(request.getDueDate())
                 .workHour(request.getWorkHour())
-                .createdBy(request.getCreatedBy())
                 .build();
 
         task.update(taskEditor);
     }
 
     @Transactional
-    public void deleteTask(DeleteTaskRequest request) {
-        Task task = taskRepository.findById(request.getTaskId())
+    public void deleteTask(Long taskId) {
+        Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ApiException(ErrorType.TASK_NOT_EXIST));
 
         taskRepository.delete(task);

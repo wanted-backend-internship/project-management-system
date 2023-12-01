@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public class CreateTaskBoxRequest {
     private String taskBoxTitle;
-    private Long taskBoxOrder;
+    private Long boardId;
 }

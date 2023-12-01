@@ -1,5 +1,6 @@
 package wanted.assignment.pmsystem.domain.planner.taskBox.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +28,7 @@ public class TaskBox {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
+    @JsonIgnore
     private Board board;
 
     public TaskBoxEditor.TaskBoxEditorBuilder toUpdate() {

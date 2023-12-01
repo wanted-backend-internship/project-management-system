@@ -10,6 +10,4 @@ public class UpdateTaskRequest {
     private String tag;
     private LocalDate dueDate;
     private String workHour;
-    private String createdBy;
-    private Long taskOrder;
 }

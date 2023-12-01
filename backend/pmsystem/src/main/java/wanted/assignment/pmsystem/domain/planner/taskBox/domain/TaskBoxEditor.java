@@ -32,7 +32,7 @@ public class TaskBoxEditor {
         }
 
         public TaskBoxEditorBuilder boxTitle(final String boxTitle) {
-            if (boxTitle != null && boxTitle.isEmpty()) {
+            if (boxTitle != null && !boxTitle.isEmpty()) {
                 this.boxTitle = boxTitle;
             }
             return this;
