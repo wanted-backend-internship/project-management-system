@@ -4,13 +4,14 @@ import {deleteBoard, displayBoards} from "../../../api/projcet/BoardApi.ts";
 import TheModal from "../../common/TheModal.vue";
 import CreateBoard from "./CreateBoard.vue";
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import { faPenToSquare, faSquarePlus } from '@fortawesome/free-regular-svg-icons';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import UpdateBoard from "./UpdateBoard.vue";
 import {useProjectStore} from "../../../store/ProjectStore.ts";
 
-library.add(faPenToSquare, faTrashCan);
+library.add(faPenToSquare, faTrashCan, faSquarePlus);
+
 const projectStore = useProjectStore();
 const selectProject = (boardId, boardTitle) => {
   projectStore.setCurrentBoard(boardId, boardTitle);
@@ -72,8 +73,9 @@ onMounted(fetchBoards);
     <div class="title">
       프로젝트
     </div>
-    <div class="button-container">
-      <button class="blue-button" @click="openCreateModal">프로젝트 생성</button>
+    <div class="button-container" @click="openCreateModal">
+      <font-awesome-icon icon="fa-regular fa-square-plus" style="margin-right: 8px"/>
+      <span>프로젝트 생성</span>
     </div>
     <div class="projects-list">
       <!-- 프로젝트 목록을 표시합니다 -->
@@ -129,21 +131,16 @@ onMounted(fetchBoards);
 }
 
 .button-container {
-  @include container(row, flex-start, flex-start, 100%, auto);
-  margin-top: 30px;
-}
-
-.blue-button {
-  @include button-blue(120px, 38px, 0);
-  @include pre200(16px, white);
-  border: none;
+  @include container(row, flex-start, center, 100%, auto);
+  margin: 10px 0 0 3px;
+  @include pre200(20px, $gray700)
 }
 
 .projects-list {
   @include container(row, flex-start, flex-start, 100%, 500px);
   overflow-y: scroll;
   flex-wrap: wrap;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .project {
@@ -181,6 +178,6 @@ onMounted(fetchBoards);
 
 .project-member-container {
   @include container(row, flex-start, flex-start, 100%, auto);
-  margin-top: 18px;
+  margin-top: 20px;
 }
 </style>
