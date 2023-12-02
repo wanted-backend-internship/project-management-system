@@ -5,7 +5,7 @@ import {useRoute} from "vue-router";
 import {useProjectStore} from "../../../store/ProjectStore.ts";
 import {fetchMember} from "../../../api/projcet/MemberApi.ts";
 import {BoardDetailResponse} from "../../../api/projcet/BoardDetailResponse.ts";
-import {deleteTaskBox} from "../../../api/projcet/TaskBoxApi.ts";
+import {deleteTaskBox, moveTaskBox} from "../../../api/projcet/TaskBoxApi.ts";
 import {deleteTask, moveTaskToOtherTaskBox, moveTaskToSameTaskBox} from "../../../api/projcet/TaskApi.ts";
 import TheModal from "../../common/TheModal.vue";
 import CreateTaskBox from "../taskBox/CreateTaskBox.vue";
@@ -139,38 +139,25 @@ const onDragOver = (event) => {
   event.preventDefault();
 };
 
-const onDropTaskBox = async (event, targetTaskBoxId) => {
+
+const onDropTaskBox = async (event, targetOrder) => {
   event.preventDefault();
-
   const type = event.dataTransfer.getData('type');
-  if (type !== 'task') return;
-
-  const taskId = event.dataTransfer.getData('id');
-  const sourceTaskBoxId = event.dataTransfer.getData('taskBoxId');
-  const sourceTaskOrder = parseInt(event.dataTransfer.getData('order'), 10);
-
-  let targetTaskOrder = boardData.value.find(box => box.taskBoxId === targetTaskBoxId)?.taskDetailResponses.length + 1 || 1;
-
-  if (targetTaskOrder === undefined) {
-    targetTaskOrder = 1;
-  }
-
-  try {
-    if (sourceTaskBoxId !== targetTaskBoxId) {
-      // Task is moved to a different task box
-      await moveTaskToOtherTaskBox({
-        prevTaskBoxId: sourceTaskBoxId,
-        newTaskBoxId: targetTaskBoxId,
-        prevTaskOrder: sourceTaskOrder.toString(),
-        newTaskOrder: targetTaskOrder.toString(),
-        taskId: taskId
+  if (type === 'taskBox') {
+    const sourceOrder = parseInt(event.dataTransfer.getData('order'));
+    try {
+      await moveTaskBox({
+        boardId: boardId.value,
+        prevTaskBoxOrder: sourceOrder.toString(),
+        currentTaskBoxOrder: targetOrder.toString()
       });
       await fetchBoardDetail();
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
   }
-};
+}
+
 
 const onDragStartTask = (event, taskId, taskOrder, taskBoxId) => {
   event.stopPropagation();
@@ -180,7 +167,7 @@ const onDragStartTask = (event, taskId, taskOrder, taskBoxId) => {
   event.dataTransfer.setData('taskBoxId', taskBoxId.toString());
 };
 
-const onDropTaskElement = async (event, targetTaskBoxId, dropPosition) => {
+const onDropTaskElement = async (event, targetTaskBoxId) => {
   event.preventDefault();
 
   const type = event.dataTransfer.getData('type');
@@ -190,12 +177,11 @@ const onDropTaskElement = async (event, targetTaskBoxId, dropPosition) => {
   const sourceTaskBoxId = event.dataTransfer.getData('taskBoxId');
   const sourceTaskOrder = parseInt(event.dataTransfer.getData('order'), 10);
 
-  let targetTaskOrder;
+  let targetTaskOrder = 1;
 
-  if (boardData.value.some(box => box.taskBoxId === targetTaskBoxId && box.taskDetailResponses.length > 0)) {
-    targetTaskOrder = calculateTargetTaskOrder(dropPosition, targetTaskBoxId);
-  } else {
-    targetTaskOrder = 1;
+  const targetTaskBox = boardData.value.find(box => box.taskBoxId === targetTaskBoxId);
+  if (targetTaskBox && targetTaskBox.taskDetailResponses.length > 0) {
+    targetTaskOrder = calculateTargetTaskOrder(0, targetTaskBoxId);
   }
 
   try {
@@ -258,10 +244,11 @@ function calculateTargetTaskOrder(dropPosition, targetTaskBoxId) {
     </div>
     <div class="kanban-container">
       <div v-for="taskBox in boardData" :key="taskBox.taskBoxId"
-           draggable="true"
-           @dragstart="onDragStartTaskBox($event, taskBox.taskBoxId, taskBox.taskBoxId)"
-           @dragover="onDragOver"
-           @drop="onDropTaskBox($event, taskBox.taskBoxId)" class="kanban-column">
+            class="kanban-column"
+            draggable="true"
+            @dragstart="onDragStartTaskBox($event, taskBox.taskBoxId, taskBox.taskBoxOrder)"
+            @dragover="onDragOver"
+            @drop="onDropTaskElement($event, taskBox.taskBoxId)">
         <div class="kanban-column-header">
           <p>
             {{ taskBox.taskBoxTitle }}
