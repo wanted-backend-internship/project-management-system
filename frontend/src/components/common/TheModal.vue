@@ -52,13 +52,13 @@ const handleClose = () => {
 }
 
 .modal-content {
-  margin-top: 100px;
+  margin-top: 60px;
   background: white;
   padding: 35px 40px 60px 40px;
   border-radius: 12px;
   min-width: 350px;
   width: auto;
-  max-height: 700px;
+  max-height: 670px;
   overflow-y: scroll;
 }
 
