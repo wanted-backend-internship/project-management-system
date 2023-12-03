@@ -18,6 +18,7 @@ import wanted.assignment.pmsystem.domain.user.User;
 import wanted.assignment.pmsystem.domain.user.UserRepository;
 import wanted.assignment.pmsystem.global.exception.ApiException;
 import wanted.assignment.pmsystem.global.exception.ErrorType;
+import wanted.assignment.pmsystem.global.util.AuthUtil;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class MemberService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final UserRepository userRepository;
+    private final AuthUtil authUtil;
 
     public SearchUserResponse searchUser (SearchUserRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
@@ -83,5 +85,15 @@ public class MemberService {
         }
 
         return memberInfoResponses;
+    }
+
+    @Transactional
+    public boolean isCheckMemberRole () {
+        Long userId = authUtil.getLoginUserIndex();
+        Member member = memberRepository.findMemberByUserId(userId);
+        if (member.getRole().equals(Role.Host)) {
+            return true;
+        }
+        return false;
     }
 }

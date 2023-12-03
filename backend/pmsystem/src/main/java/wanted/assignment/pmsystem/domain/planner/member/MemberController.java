@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wanted.assignment.pmsystem.domain.planner.member.dto.requests.SearchUserRequest;
 import wanted.assignment.pmsystem.domain.planner.member.dto.requests.CreateMemberRequest;
-import wanted.assignment.pmsystem.domain.planner.member.dto.requests.DeleteMemberRequest;
 import wanted.assignment.pmsystem.domain.planner.member.dto.responses.MemberInfoResponse;
 import wanted.assignment.pmsystem.domain.planner.member.dto.responses.SearchUserResponse;
 import wanted.assignment.pmsystem.global.exception.ApiException;
@@ -61,6 +60,17 @@ public class MemberController {
         try {
             List<MemberInfoResponse> memberInfoResponses = memberService.displayMemberInfo(boardId);
             return ResponseEntity.ok(memberInfoResponses);
+
+        } catch (ApiException apiException) {
+            return ResponseEntity.status(apiException.getErrorType().getStatus()).body(apiException.getErrorType().getMessage());
+        }
+    }
+
+    @PostMapping(value = "/members/check")
+    public ResponseEntity<?> checkLoginUserHost () {
+        try {
+            boolean response = memberService.isCheckMemberRole();
+            return ResponseEntity.ok(response);
 
         } catch (ApiException apiException) {
             return ResponseEntity.status(apiException.getErrorType().getStatus()).body(apiException.getErrorType().getMessage());
