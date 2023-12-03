@@ -3,7 +3,7 @@ import {computed, onMounted, ref} from "vue";
 import {boardDetail} from "../../../api/projcet/BoardApi.ts";
 import {useRoute} from "vue-router";
 import {useProjectStore} from "../../../store/ProjectStore.ts";
-import {fetchMember} from "../../../api/projcet/MemberApi.ts";
+import {checkMember, fetchMember} from "../../../api/projcet/MemberApi.ts";
 import {BoardDetailResponse} from "../../../api/projcet/BoardDetailResponse.ts";
 import {deleteTaskBox, moveTaskBox} from "../../../api/projcet/TaskBoxApi.ts";
 import {deleteTask, moveTaskToOtherTaskBox, moveTaskToSameTaskBox} from "../../../api/projcet/TaskApi.ts";
@@ -16,10 +16,11 @@ import UserSearch from "../member/UserSearch.vue";
 import DeleteMember from "../member/DeleteMember.vue";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPenToSquare,faCalendarCheck, faClock } from '@fortawesome/free-regular-svg-icons';
-import { faTrashCan, faFileCirclePlus, faFolderPlus, faUserPlus, faUserMinus } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan, faFileCirclePlus, faFolderPlus, faUserPlus, faUserMinus, faAddressCard, faUsersRectangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import MemberReport from "../../statistic/MemberReport.vue";
 
-library.add(faPenToSquare, faTrashCan, faFileCirclePlus, faCalendarCheck, faClock, faFolderPlus, faUserPlus, faUserMinus);
+library.add(faPenToSquare, faTrashCan, faFileCirclePlus, faCalendarCheck, faClock, faFolderPlus, faUserPlus, faUserMinus, faAddressCard, faUsersRectangle);
 
 const projectStore = useProjectStore();
 const boardTitle = computed(() => projectStore.currentBoardTitle);
@@ -28,6 +29,7 @@ const boardData = ref<BoardDetailResponse[]>([]);
 const memberData = ref([]);
 const route = useRoute();
 const boardId = ref(route.params.boardId);
+const isMemberHost = ref('');
 
 const isCreateModalOpen = ref(false);
 const isUpdateModalOpen = ref(false);
@@ -35,6 +37,7 @@ const isTaskCreateModalOpen = ref(false);
 const isTaskUpdateModalOpen = ref(false);
 const isMemberSearchModalOpen = ref(false);
 const isMemberDeleteModalOpen = ref(false);
+const isMemberReportModalOpen = ref(false);
 
 const openCreateModal = () => {
   isCreateModalOpen.value = true;
@@ -66,6 +69,10 @@ const openMemberSettingModal = () => {
   isMemberDeleteModalOpen.value = true;
 }
 
+const openMemberReportModal = () => {
+  isMemberReportModalOpen.value = true;
+}
+
 const closeModal = () => {
   isCreateModalOpen.value = false;
   isUpdateModalOpen.value = false;
@@ -73,6 +80,7 @@ const closeModal = () => {
   isTaskUpdateModalOpen.value = false;
   isMemberSearchModalOpen.value = false;
   isMemberDeleteModalOpen.value = false;
+  isMemberReportModalOpen.value = false;
 };
 
 const getTagClass = (tag) => {
@@ -126,7 +134,18 @@ const fetchMemberInfo = async () => {
   }
 }
 
+const checkMemberRole = async () => {
+  try {
+    const response = await checkMember();
+    isMemberHost.value = response.data
+
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 onMounted(fetchBoardDetail);
+onMounted(checkMemberRole);
 
 const onDragStartTaskBox = (event, taskBoxId, taskBoxOrder) => {
   event.dataTransfer.setData('type', 'taskBox');
@@ -237,9 +256,11 @@ function calculateTargetTaskOrder(dropPosition, targetTaskBoxId) {
         {{ boardTitle }}
       </div>
       <div>
-        <font-awesome-icon style="margin-right: 15px" @click="openCreateModal" icon="fa-solid fa-folder-plus" />
-        <font-awesome-icon style="margin-right: 12px" @click="openMemberSearchModal(boardId)" icon="fa-solid fa-user-plus" />
-        <font-awesome-icon icon="fa-solid fa-user-minus" @click="openMemberSettingModal"/>
+        <font-awesome-icon style="margin-right: 15px; font-size: 23px" @click="openCreateModal" icon="fa-solid fa-folder-plus" />
+        <font-awesome-icon style="margin-right: 10px; font-size: 19px" @click="openMemberSearchModal(boardId)" icon="fa-solid fa-user-plus" />
+        <font-awesome-icon icon="fa-solid fa-user-minus" style="margin-right: 13px; font-size: 19px" @click="openMemberSettingModal"/>
+        <font-awesome-icon v-if="isMemberHost" icon="fa-solid fa-address-card" style="margin-right: 13px; font-size: 22px" @click="openMemberReportModal"/>
+        <font-awesome-icon v-if="isMemberHost" icon="fa-solid fa-users-rectangle" style="font-size: 21px"/>
       </div>
     </div>
     <div class="kanban-container">
@@ -333,6 +354,10 @@ function calculateTargetTaskOrder(dropPosition, targetTaskBoxId) {
     <DeleteMember
         :boardId="boardId"
         @member-deleted="memberInfo"/>
+  </TheModal>
+
+  <TheModal :is-open="isMemberReportModalOpen" @close="closeModal">
+    <MemberReport :boardId="boardId"/>
   </TheModal>
 </template>
 

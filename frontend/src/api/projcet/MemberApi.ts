@@ -24,3 +24,8 @@ export const deleteMember = async (memberId: string) => {
     const response = await axiosInstance.delete(`/boards/members/${memberId}`)
     return response;
 }
+
+export const checkMember = async () => {
+    const response = await axiosInstance.post('/boards/members/check');
+    return response;
+}
