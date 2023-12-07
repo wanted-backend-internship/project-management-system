@@ -88,9 +88,9 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean isCheckMemberRole () {
+    public boolean isCheckMemberRole (Long boardId) {
         Long userId = authUtil.getLoginUserIndex();
-        Member member = memberRepository.findMemberByUserId(userId);
+        Member member = memberRepository.findByUserIdAndBoardId(userId, boardId).get();
         if (member.getRole().equals(Role.Host)) {
             return true;
         }

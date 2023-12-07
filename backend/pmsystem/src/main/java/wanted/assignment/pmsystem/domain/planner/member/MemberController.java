@@ -66,10 +66,10 @@ public class MemberController {
         }
     }
 
-    @PostMapping(value = "/members/check")
-    public ResponseEntity<?> checkLoginUserHost () {
+    @PostMapping(value = "/{boardId}/members/check")
+    public ResponseEntity<?> checkLoginUserHost (@PathVariable("boardId") Long boardId) {
         try {
-            boolean response = memberService.isCheckMemberRole();
+            boolean response = memberService.isCheckMemberRole(boardId);
             return ResponseEntity.ok(response);
 
         } catch (ApiException apiException) {

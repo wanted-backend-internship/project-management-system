@@ -1,4 +1,4 @@
-package wanted.assignment.pmsystem.domain.planner.statistics.service;
+package wanted.assignment.pmsystem.domain.planner.statistics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import wanted.assignment.pmsystem.domain.planner.taskBox.domain.TaskBox;
 
 @Service
 @RequiredArgsConstructor
-public class MemberStatisticsService {
+public class StatisticsService {
     private final TaskBoxRepository taskBoxRepository;
     private final TaskRepository taskRepository;
     private final MemberRepository memberRepository;

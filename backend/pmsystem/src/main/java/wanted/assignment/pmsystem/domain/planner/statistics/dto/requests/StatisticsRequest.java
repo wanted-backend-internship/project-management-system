@@ -6,7 +6,7 @@ import lombok.Getter;
 import org.springframework.lang.Nullable;
 
 @Getter
-public class MemberStatisticsRequest {
+public class StatisticsRequest {
     private List<Long> taskBoxIds;
     private List<String> memberNames;
     @Nullable

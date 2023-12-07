@@ -8,24 +8,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import wanted.assignment.pmsystem.domain.planner.statistics.dto.requests.MemberStatisticsRequest;
-import wanted.assignment.pmsystem.domain.planner.statistics.dto.responses.MemberStatisticsResponse;
+import wanted.assignment.pmsystem.domain.planner.statistics.dto.requests.StatisticsRequest;
+import wanted.assignment.pmsystem.domain.planner.statistics.dto.responses.StatisticsResponse;
 import wanted.assignment.pmsystem.domain.planner.statistics.dto.responses.StatisticBasicInfoResponse;
-import wanted.assignment.pmsystem.domain.planner.statistics.repository.MemberStatisticsRepository;
-import wanted.assignment.pmsystem.domain.planner.statistics.service.MemberStatisticsService;
 import wanted.assignment.pmsystem.global.exception.ApiException;
 
 @RestController
 @RequestMapping(value = "/api/boards")
 @RequiredArgsConstructor
 public class StatisticsController {
-    private final MemberStatisticsService memberStatisticsService;
-    private final MemberStatisticsRepository memberStatisticsRepository;
+    private final StatisticsService statisticsService;
+    private final StatisticsRepository statisticsRepository;
 
-    @PostMapping(value = "/{boardId}/statistics/member")
+    @PostMapping(value = "/{boardId}/statistics")
     public ResponseEntity<?> displayBasicInfo (@PathVariable("boardId") Long boardId) {
         try {
-            StatisticBasicInfoResponse response = memberStatisticsService.displayBasicInfo(boardId);
+            StatisticBasicInfoResponse response = statisticsService.displayBasicInfo(boardId);
             return ResponseEntity.ok(response);
 
         } catch (ApiException apiException) {
@@ -33,10 +31,10 @@ public class StatisticsController {
         }
     }
 
-    @PostMapping(value = "/statistics/member/report")
-    public ResponseEntity<?> displayResults (@RequestBody MemberStatisticsRequest request) {
+    @PostMapping(value = "/statistics/report")
+    public ResponseEntity<?> displayResults (@RequestBody StatisticsRequest request) {
         try {
-            List<MemberStatisticsResponse> responses = memberStatisticsRepository.generateMemberStatistics(request);
+            List<StatisticsResponse> responses = statisticsRepository.generateMemberStatistics(request);
             return ResponseEntity.ok(responses);
 
         } catch (ApiException apiException) {

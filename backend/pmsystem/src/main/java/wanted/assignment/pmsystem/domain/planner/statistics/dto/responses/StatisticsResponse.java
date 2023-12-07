@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberStatisticsResponse {
+public class StatisticsResponse {
     private String memberName;
     private List<Object[]> results;
 }
