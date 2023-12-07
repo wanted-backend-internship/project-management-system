@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {displayBasicInfo, displayResults} from "../../api/statistics/MemberStatistics.ts";
+import {displayBasicInfo, displayMemberResults } from "../../api/statistics/Statistics.ts";
 import {onMounted, ref, watchEffect} from "vue";
 import { Chart, registerables } from 'chart.js';
 
@@ -72,7 +72,7 @@ onMounted(fetchBasicInfo);
 
 const handleMemberReport = async () => {
   try{
-    const response = await displayResults({
+    const response = await displayMemberResults({
       taskBoxIds: taskBoxIdList.value,
       memberNames: memberNameList.value,
       startDate: start.value,

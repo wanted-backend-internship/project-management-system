@@ -26,10 +26,10 @@ const loginStatus = computed(() => authStore.isLoggedIn);
           <span>프로젝트</span>
         </router-link>
 
-        <router-link to="/statistics" class="menu-lists" active-class="active">
-          <font-awesome-icon icon="fa-solid fa-chart-simple" class="icon"/>
-          <span>통계</span>
-        </router-link>
+<!--        <router-link to="/statistics" class="menu-lists" active-class="active">-->
+<!--          <font-awesome-icon icon="fa-solid fa-chart-simple" class="icon"/>-->
+<!--          <span>통계</span>-->
+<!--        </router-link>-->
       </div>
       <router-link to="/logout" v-if="loginStatus" class="logout-btn"  style="margin-top: 40px;" active-class="active">
         <font-awesome-icon icon="fa-solid fa-arrow-right-from-bracket" class="icon"/>

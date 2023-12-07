@@ -4,7 +4,8 @@ import {UnwrapRef} from "vue";
 export const createBoard = async (boardData: {
     title: string;
 }) => {
-    await axiosInstance.post('/boards', boardData);
+    const response = await axiosInstance.post('/boards', boardData);
+    return response;
 };
 
 export const displayBoards = async () => {

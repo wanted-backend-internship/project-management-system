@@ -62,6 +62,10 @@ const handleClose = () => {
   overflow-y: scroll;
 }
 
+.modal-content::-webkit-scrollbar {
+  display: none;
+}
+
 .modal-button {
   @include container(row, flex-end, center, 100%, 100%)
 }

@@ -19,6 +19,7 @@ import { faPenToSquare,faCalendarCheck, faClock } from '@fortawesome/free-regula
 import { faTrashCan, faFileCirclePlus, faFolderPlus, faUserPlus, faUserMinus, faAddressCard, faUsersRectangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import MemberReport from "../../statistic/MemberReport.vue";
+import TeamReport from "../../statistic/TeamReport.vue";
 
 library.add(faPenToSquare, faTrashCan, faFileCirclePlus, faCalendarCheck, faClock, faFolderPlus, faUserPlus, faUserMinus, faAddressCard, faUsersRectangle);
 
@@ -38,6 +39,7 @@ const isTaskUpdateModalOpen = ref(false);
 const isMemberSearchModalOpen = ref(false);
 const isMemberDeleteModalOpen = ref(false);
 const isMemberReportModalOpen = ref(false);
+const isTeamReportModalOpen = ref(false);
 
 const openCreateModal = () => {
   isCreateModalOpen.value = true;
@@ -73,6 +75,10 @@ const openMemberReportModal = () => {
   isMemberReportModalOpen.value = true;
 }
 
+const openTeamReportModal = () => {
+  isTeamReportModalOpen.value = true;
+}
+
 const closeModal = () => {
   isCreateModalOpen.value = false;
   isUpdateModalOpen.value = false;
@@ -81,6 +87,7 @@ const closeModal = () => {
   isMemberSearchModalOpen.value = false;
   isMemberDeleteModalOpen.value = false;
   isMemberReportModalOpen.value = false;
+  isTeamReportModalOpen.value = false;
 };
 
 const getTagClass = (tag) => {
@@ -136,7 +143,7 @@ const fetchMemberInfo = async () => {
 
 const checkMemberRole = async () => {
   try {
-    const response = await checkMember();
+    const response = await checkMember(boardId.value);
     isMemberHost.value = response.data
 
   } catch (error) {
@@ -260,7 +267,7 @@ function calculateTargetTaskOrder(dropPosition, targetTaskBoxId) {
         <font-awesome-icon style="margin-right: 10px; font-size: 19px" @click="openMemberSearchModal(boardId)" icon="fa-solid fa-user-plus" />
         <font-awesome-icon icon="fa-solid fa-user-minus" style="margin-right: 13px; font-size: 19px" @click="openMemberSettingModal"/>
         <font-awesome-icon v-if="isMemberHost" icon="fa-solid fa-address-card" style="margin-right: 13px; font-size: 22px" @click="openMemberReportModal"/>
-        <font-awesome-icon v-if="isMemberHost" icon="fa-solid fa-users-rectangle" style="font-size: 21px"/>
+        <font-awesome-icon v-if="isMemberHost" icon="fa-solid fa-users-rectangle" style="font-size: 21px" @click="openTeamReportModal"/>
       </div>
     </div>
     <div class="kanban-container">
@@ -269,7 +276,7 @@ function calculateTargetTaskOrder(dropPosition, targetTaskBoxId) {
             draggable="true"
             @dragstart="onDragStartTaskBox($event, taskBox.taskBoxId, taskBox.taskBoxOrder)"
             @dragover="onDragOver"
-            @drop="onDropTaskElement($event, taskBox.taskBoxId)">
+            @drop="onDropTaskBox($event, taskBox.taskBoxId)">
         <div class="kanban-column-header">
           <p>
             {{ taskBox.taskBoxTitle }}
@@ -295,7 +302,8 @@ function calculateTargetTaskOrder(dropPosition, targetTaskBoxId) {
               <font-awesome-icon icon="fa-solid fa-trash-can" @click="handleDeleteTask(task.id)" class="kanban-row-icon"/>
             </div>
           </div>
-          <div class="kanban-row-content">
+          <div class="kanban-row-content"
+               @drop="onDropTaskElement($event, taskBox.taskBoxId, taskIndex)">
             <div class="kanban-row-content-icon">
               <font-awesome-icon style="margin-right: 5px" icon="fa-regular fa-calendar-check" />
               <span>{{ task.dueDate }}</span>
@@ -358,6 +366,10 @@ function calculateTargetTaskOrder(dropPosition, targetTaskBoxId) {
 
   <TheModal :is-open="isMemberReportModalOpen" @close="closeModal">
     <MemberReport :boardId="boardId"/>
+  </TheModal>
+
+  <TheModal :is-open="isTeamReportModalOpen" @close="closeModal">
+    <TeamReport :boardId="boardId"/>
   </TheModal>
 </template>
 

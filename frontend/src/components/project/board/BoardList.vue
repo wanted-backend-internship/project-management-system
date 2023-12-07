@@ -79,9 +79,9 @@ onMounted(fetchBoards);
     </div>
     <div class="projects-list">
       <!-- 프로젝트 목록을 표시합니다 -->
-      <router-link :to="`/project/${board.boardId}`" class="project" v-for="board in boardsData" :key="board.boardId" @click="selectProject(board.boardId, board.boardTitle)">
+      <div class="project" v-for="board in boardsData" :key="board.boardId" @click="selectProject(board.boardId, board.boardTitle)">
         <div class="project-content">
-          <div class="project-title">{{ board.boardTitle }}</div>
+          <router-link :to="`/project/${board.boardId}`" div class="project-title">{{ board.boardTitle }}</router-link>
           <div class="project-member-container">
             <div v-for="member in board.members" :key="member.memberId" class="badge-created">
               {{ member.username }}
@@ -92,7 +92,7 @@ onMounted(fetchBoards);
           <font-awesome-icon icon="fa-regular fa-pen-to-square" @click="openUpdateModal(board.boardId, board.boardTitle)" style="margin-right: 15px;" class="board-icon"/>
           <font-awesome-icon icon="fa-solid fa-trash-can" @click="handleDeleteBoard(board.boardId)" class="board-icon"/>
         </div>
-      </router-link>
+      </div>
     </div>
   </div>
 
@@ -123,7 +123,9 @@ onMounted(fetchBoards);
 }
 
 .project-title {
-  @include pre300(26px, $black)
+  @include pre300(26px, $black);
+  color: inherit;
+  text-decoration: none;
 }
 
 .title {
@@ -146,12 +148,10 @@ onMounted(fetchBoards);
 .project {
   @include container(row, flex-start, flex-start, 400px, 155px);
   background-color: $white;
-  margin: 10px 20px 10px 0;
+  margin: 10px 20px 0 0;
   border-radius: 12px;
   border: 1px solid $black;
   padding: 30px 20px 30px 30px;
-  text-decoration: none;
-  color: inherit;
 }
 
 .project-content {
@@ -179,5 +179,6 @@ onMounted(fetchBoards);
 .project-member-container {
   @include container(row, flex-start, flex-start, 100%, auto);
   margin-top: 20px;
+  flex-wrap: wrap;
 }
 </style>
